@@ -68,3 +68,20 @@ links, so i just created 2 more:
 a 'seetings': touch app/views/pages/settings.html.erb,
 and a 'help':touch app/views/pages/help.html.erb ).
 =================================Flitter:Day2===================================
+today we're going to go through installing devise & using it to give us dynamic
+navigation.
+now that were totally professionals with devise, it's gonna take us no time at all
+to install & start using devise.
+1st we kill our server.
+2nd we c/p the gem in gemfile
+3rd we bundle install
+4th we rails g devise:install
+5th we rails g devise User
+6th we rails g devise:views
+7th rake db:migrate
+8th we run our server.
+(>0-0)> done.
+//////////////////////////////Dynamic Navigation\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+now that we have the ability to sign in we want to make it so a guest sees what
+a guest shoud see, and that a user sees what a user should see. this is referred
+to as dynamic navigation.
