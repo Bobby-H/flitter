@@ -1,7 +1,7 @@
 *=  Welcome to the Flitter README; where i'll list  =*
 *=  the steps taken both in brainstorming & in      =*
 *=  development for our twitter clone; Flitter      =*
-
+=================================Flitter:Day1===================================
 So in yesterdays class i mentioned that the differences in development often come
 from preferred approach. yesterday we built simple-blog; a bare bones
 rails blog, from the backend up, starting from the model and then generating our
@@ -9,7 +9,8 @@ associated controller and its accompanying view.
 
 Since were referencing an existing website i'm thinking "let me get the look down
 first, then i'll build out my backend." And since I know my controller holds all
-my respective pages - the first thing i have to do is generate a controller.
+my respective pages - the first thing i have to do (after rails new app, cd app)
+is generate a controller.
 
 im naming my controller Pages because it's going to be the file holding all the
 rest of my pages (my Controller#Actions). Pages holds my index page, home page,
@@ -49,4 +50,21 @@ it!
 so i first pull up the documentation on the Oficial Bootstrap gem,
 https://github.com/twbs/bootstrap-sass, c/p the gem line into my gemfile, &
 bundle install.
-And from here on down i'm just referencing documentation.
+And from here on down i'm just referencing documentation. Then I commit.
+
+navbar time!
+let's go to getbootstrap.com/components/#nav >> scroll down to defualt nav >>
+and copy the nav code.
+but where do we put it?
+touch app/views/layouts/_nav.html.erb >> paste BS here
+render nav in application.html.erb ABOVE yield tag (unpack this)
+view our default nav in our local host.
+open dev tools and, with our element slector, begin manipulating, deleting, even
+adding new bootstrap to the point of your liking. copy the entire navbar from
+within your DOM and paste it over our default.
+replace their fill-in text with more meaningful links; perhaps with the paths of
+our controller actions (i prefered my nav-bar to have more buttons than i had
+links, so i just created 2 more:
+a 'seetings': touch app/views/pages/settings.html.erb,
+and a 'help':touch app/views/pages/help.html.erb ).
+=================================Flitter:Day2===================================
