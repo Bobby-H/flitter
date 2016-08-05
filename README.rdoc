@@ -81,7 +81,70 @@ to install & start using devise.
 7th rake db:migrate
 8th we run our server.
 (>0-0)> done.
-//////////////////////////////Dynamic Navigation\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////Dynamic Navigation|||||||||d6f7daff38a6b64afc7e388c208f0bb95a5b7317\\\\
 now that we have the ability to sign in we want to make it so a guest sees what
 a guest shoud see, and that a user sees what a user should see. this is referred
 to as dynamic navigation.
+our first steps?
+let's create 2 partials called (app/views/layouts/)_nav_user.html.erb & _nav_guest.html.erb
+then let's go to our original _nav.html.erb and c/p that code into both new files.
+now, devise let us sign in just fine - but we can't really leave!
+welp - might as well work on our _nav_user.html.erb first since we're stuck here.
+let's take a closer look at what's keeping us stuck here.
+we've got a 'log out' button that's connected to nothing. so we need to give it
+some power. how do we do that?
+
+ruby is our language of programmatic power; and Embedded RuBy is how we're able
+to use it on our html. let's see a demonstration.
+let's go ahead and delete the contents of our nav.html.erb.
+now let's think about the task at hand. how are we to know when a user is signed
+in or not? maybe devise knows - devise is good at this sort of authentication
+stuff. ah - "user_signed_in?" -> a built in helper.
+and as rubyists, we're well versed in boolean conditioning; if a user is signed
+in - show them the user page, otherwise they're a guest.
+<% if user_signed_in? %>
+  <%= render 'layouts/nav_user' %>
+<% else %>
+  <%= render 'layouts/nav_guest' %>
+<% end %>
+feel like a wizard, yet?
+<insert Nintendo 'now your playing with power' gif>
+
+////User now greeted by email |||| 1ed923f85df3d307cdd74495bbcb565de3ae7757\\\\\
+
+let's add some guest functionality here; a guest should have the option to either
+sign in or sign up. to be able to link_to this functionality we'll reference
+rake routes to see what our options are.
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome<span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><a href="/help">help</a></li>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to 'Sign In', user_session_path %></li>
+    <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+  </ul>
+</li>
+nice!
+and before we commit - let's make our sign in experience a bit more personable;
+let's greet our user upon sign in by their email!
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %><span class="caret"></span></a>
+commit!
+
+add username to user; greet user by username! 0e8a8e47e17b3450ad1d389f0b4655b5ae219dfd
+
+so - to better demonstrate what's happening when we migrate im just going to name
+a migration and im going to manually type out what would happen if we generated
+username(add_column :users, :username, :string),
+then im going to add a schema statement to assure everyone is unique(
+add_index :users, :username, unique: true
+). http://apidock.com/rails/ActiveRecord/ConnectionAdapters/SchemaStatements/add_index
+and then we'll give our one user a username via active record!
+
+////////////////////////////Strong Parameters\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+so - to start, this code is going to look really crazy. you may be wondering how
+i know to write it at all. the answer is: documentation. I want strong parameters:
+a RoR security feature that allows the DB to be updated while protecting the DB.
+application_controller.html.erb
+lastly, we want to implement some routing to get the user's name to display in
+their profile url.
+1) change the route from: get '/profile' => 'pages#profile' To: get '/user/:id' => 'pages#profile'
