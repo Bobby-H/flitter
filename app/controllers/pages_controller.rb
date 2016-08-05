@@ -15,6 +15,7 @@ class PagesController < ApplicationController
       redirect_to root_path, :notice => "User not found!"
     end
     @posts = Post.all.where("user_id = ?", User.find_by_username(params[:id]).id) #give me all the posts in my database
+    @newPost = Post.new
   end
 
   def explore

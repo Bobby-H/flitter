@@ -215,3 +215,10 @@ now we should see the fleets we fleeted in our DB on our profile page!
 
 but why stop there? let's use the same code to populate over our home and explore
 pages where they host fleets!
+
+ohkay - so we've got fleets posting across multiple pages!
+let's fix that bootstrap style issue!
+
+now let's make a form to be able to submit fleets the REAL way!
+why write it when we can c/p it from devise(edit.html.erb)!
+make a new folder to hold this form, since it's for submitting fleets.
