@@ -192,3 +192,26 @@ we set up that validation!
 the explore page will be similar - but we actually want ALL posts to display there!
 and in our profile we'll just see only our posts, or only the posts of the user
 profile you're visiting.
+
+so let's hop over to the pages controller & address our profile action#controller
+we're gonna write in a bit of logic to display the user's username in the url &
+below that code were going to add our instance variable @posts = Post.all.
+
+now let's go over to our profile page and give a looksy.
+let's make our 'Fleets' placeholder real now that we have our Post model with its
+content param!
+
+<div class="col-xs-6">
+  <% for @p in @posts %>
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <p><%= @p.content %></p>
+        </div>
+    </div>
+  <% end %>
+</div>
+
+now we should see the fleets we fleeted in our DB on our profile page!
+
+but why stop there? let's use the same code to populate over our home and explore
+pages where they host fleets!

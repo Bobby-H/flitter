@@ -1,2 +1,38 @@
-<h1>Pages#explore</h1>
-<p>Find me in app/views/pages/explore.html.erb</p>
+<div class="row">
+  <div class="jumbotron">
+    <center><h1>Explore</h1></center>
+  </div>
+</div>
+  <div class="col-xs-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="container">
+           <form class="navbar-form navbar-navbar" role="search">
+             <div class="form-group has-feedback">
+               <input type="text" class="form-control" placeholder="What's Happening?" />
+               <i class="glyphicon glyphicon-camera form-control-feedback"></i>
+             </div>
+           </form>
+          </div>
+        </div>
+        <div class="panel-body">
+          <center>
+            <% for @p in @posts %>
+              <div class="panel panel-default">
+                  <div class="panel-body">
+                    <p><%= @p.content %></p>
+                  </div>
+              </div>
+            <% end %>
+          </center>
+        </div>
+    </div>
+  </div>
+  <div class="col-xs-3">
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <p>Who to Follow</p>
+        </div>
+    </div>
+  </div>
+</div>
