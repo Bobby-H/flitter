@@ -177,3 +177,18 @@ at 140 characters.
 so let's see if this works >> first in our database!
 > u = User.find_by(#)
 > p = Post.new(content:"test post", user_id: u.id)
+
+NEXT: validations
+whenever we want to tie 2 or more models together we're going to need to use
+associations.
+user.rb: has_many :posts
+post.rb: default_scope -> { order(created_at: :desc) }
+
+so now i have to populate my views with the posts from my DB!
+but twitter has some parameters;
+the home page displays posts from all the people you follow.
+but since we can't follow anyone yet we're going to just display all posts until
+we set up that validation!
+the explore page will be similar - but we actually want ALL posts to display there!
+and in our profile we'll just see only our posts, or only the posts of the user
+profile you're visiting.
