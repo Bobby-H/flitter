@@ -164,3 +164,16 @@ the next step is to generate a model for Post. im giving the model the columns
 content:text & user:references.
 read: rails g model Post content:text user:references << references enables us
 to know which user owns which post!
+so let's see what we got!
+
+i'll go over to my migration and assert that everything is as expected, but ALSO
+to add my index behavior with add_index :posts,[:user_id, :created_at]
+after that i want to go to my post model and make sure i see 'belongs_to :user'
+(that's a result from user:resources). were also going to validate that the user
+id MUST be present in order to post, and then were going to validate another
+behavior that made twitter in/famous: were going to make sure all posts are maxed
+at 140 characters.
+
+so let's see if this works >> first in our database!
+> u = User.find_by(#)
+> p = Post.new(content:"test post", user_id: u.id)
