@@ -148,3 +148,19 @@ application_controller.html.erb
 lastly, we want to implement some routing to get the user's name to display in
 their profile url.
 1) change the route from: get '/profile' => 'pages#profile' To: get '/user/:id' => 'pages#profile'
+//////////////////////////Add UserName To URL @ Profile\\\\\\\\\\\\\\\\\\\\\\\\\
+today we're going to round off the week by making it possible to tweet! Sorry -
+my lawyers are telling me to say fleet!
+
+let's think about the relations an associations of a tw-Fleet -- ohkay, im just
+gonna say post from here on out. a post has an author (read User). so since were
+gonna give our user the ability to post first, let's set up some customization
+for them on their profile page.
+got to routes and change your profile get path to 'user/:id'(unique id) and in
+nav_user change your profile line to
+<li><a href="/user/<%= current_user.username %>">profile</a></li>
+neat!
+the next step is to generate a model for Post. im giving the model the columns
+content:text & user:references.
+read: rails g model Post content:text user:references << references enables us
+to know which user owns which post!
