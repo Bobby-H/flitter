@@ -217,8 +217,45 @@ but why stop there? let's use the same code to populate over our home and explor
 pages where they host fleets!
 
 ohkay - so we've got fleets posting across multiple pages!
-let's fix that bootstrap style issue!
+but right now they're all creating new columns per fleet - which is messing up
+our layout.
+let's fix that bootstrap style issue by deleting those duplicating column lines.
 
 now let's make a form to be able to submit fleets the REAL way!
 why write it when we can c/p it from devise(edit.html.erb)!
+
 make a new folder to hold this form, since it's for submitting fleets.
+and then make a _post_form partial!
+paste the devise edit page into your new partial and redact it down to this:
+
+<%= form_for(@newPost) do |f| %>
+
+  <div class="field">
+    <%= f.label :content %><br />
+    <%= f.text_field :content, autofocus: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Add Post" %>
+  </div>
+<% end %>
+
+now we'll render it into our profile page.
+
+works perfectly, right? what do you mean an error?! BAH!
+it because Rails doesn't know what to do with the form data once its passed back.
+it has never seen @newPost before, and doesn't know what to make of it.
+
+we resolve this by going into the profile action#controller & making our
+instance variable real; @newPost = Post.new
+
+if errors were dollars i'd be a wealthy guy. ohk - let's think through this routing
+error.
+"undefined method `posts_path'" >> hmm, routing issue.
+rake routes.
+dang, rails is right. there really isn't a path for it.
+welp - we tried, guys. good effort. let's just give up. development is hard.
+[ The End ]
+(>0~0)> but weit ... resources! or to put it better, resources :posts
+=========================================Day:3==================================
+Adding Followers to users!

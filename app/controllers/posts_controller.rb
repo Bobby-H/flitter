@@ -8,7 +8,7 @@ class PostsController < ApplicationController
      @post.user_id = current_user.id #
      respond_to do |f|
        if (@post.save)
-         f.html { redirect_to "", notice: "Tweet Posted!" }
+         f.html { redirect_to "/home", notice: "Tweet Posted!" }
        else
          f.html { redirect_to "", notice: "Error: Post Not Saved." }
        end
