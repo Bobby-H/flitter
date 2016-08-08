@@ -1,28 +1,287 @@
-== README
+*=  Welcome to the Flitter README; where i'll list  =*
+*=  the steps taken both in brainstorming & in      =*
+*=  development for our twitter clone; Flitter      =*
+=================================Flitter:Day1===================================
+So in yesterdays class i mentioned that the differences in development often come
+from preferred approach. yesterday we built simple-blog; a bare bones
+rails blog, from the backend up, starting from the model and then generating our
+associated controller and its accompanying view.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Since were referencing an existing website i'm thinking "let me get the look down
+first, then i'll build out my backend." And since I know my controller holds all
+my respective pages - the first thing i have to do (after rails new app, cd app)
+is generate a controller.
 
-Things you may want to cover:
+im naming my controller Pages because it's going to be the file holding all the
+rest of my pages (my Controller#Actions). Pages holds my index page, home page,
+profile page, & explore page.
 
-* Ruby version
+when we press enter we see that rails has generated our PagesController file,
+complete with empty actions for each of our pages - which we can also see in our
+views.
 
-* System dependencies
+sweet - now we can visit our views by using the extensions /pages/controllerAction
+but, while this works, it could work better. we want to think as if though
+localhost:3000 is a placeholder for flitter.com. when you visit twitter.com you
+don't have to type out twitter.com/pages/index to get to their index page, and we
+should have the same aspirations.
 
-* Configuration
+we're going to make our /pages/index path our root path. i do this by replacing
+index's URI path with it's controller#action:
+From: get 'pages/index' To: root 'pages#index'
 
-* Database creation
+swik; homepage!
 
-* Database initialization
+but weit - not that that's not cool - but i still have to type out '/pages/home'
+in order to avoid an error. flitter is doomed.
 
-* How to run the test suite
+(>0~0)> I hear ya; what we need are smart URLs.
+{ Reference code }
 
-* Services (job queues, cache servers, search engines, etc.)
+neat; so now all of my links are smart and i have root path. but no one's gonna
+go to a site where you have to path around via url. we need a navbar - or, to be
+more precise, we need a _nav(.html.erb)ar. and we're gonna make it using a partial.
 
-* Deployment instructions
+since twitter made bootstrap, and used bootstrap to stylize their site, im going
+to do the same thing. BUT - instead of going to my app/views/layouts/app.html.erb
+to manually c/p CDNs into our app - i just want to install a gem and be done with
+it!
 
-* ...
+so i first pull up the documentation on the Oficial Bootstrap gem,
+https://github.com/twbs/bootstrap-sass, c/p the gem line into my gemfile, &
+bundle install.
+And from here on down i'm just referencing documentation. Then I commit.
 
+navbar time!
+let's go to getbootstrap.com/components/#nav >> scroll down to defualt nav >>
+and copy the nav code.
+but where do we put it?
+touch app/views/layouts/_nav.html.erb >> paste BS here
+render nav in application.html.erb ABOVE yield tag (unpack this)
+view our default nav in our local host.
+open dev tools and, with our element slector, begin manipulating, deleting, even
+adding new bootstrap to the point of your liking. copy the entire navbar from
+within your DOM and paste it over our default.
+replace their fill-in text with more meaningful links; perhaps with the paths of
+our controller actions (i prefered my nav-bar to have more buttons than i had
+links, so i just created 2 more:
+a 'seetings': touch app/views/pages/settings.html.erb,
+and a 'help':touch app/views/pages/help.html.erb ).
+=================================Flitter:Day2===================================
+today we're going to go through installing devise & using it to give us dynamic
+navigation.
+now that were totally professionals with devise, it's gonna take us no time at all
+to install & start using devise.
+1st we kill our server.
+2nd we c/p the gem in gemfile
+3rd we bundle install
+4th we rails g devise:install
+5th we rails g devise User
+6th we rails g devise:views
+7th rake db:migrate
+8th we run our server.
+(>0-0)> done.
+/////////Dynamic Navigation|||||||||d6f7daff38a6b64afc7e388c208f0bb95a5b7317\\\\
+now that we have the ability to sign in we want to make it so a guest sees what
+a guest shoud see, and that a user sees what a user should see. this is referred
+to as dynamic navigation.
+our first steps?
+let's create 2 partials called (app/views/layouts/)_nav_user.html.erb & _nav_guest.html.erb
+then let's go to our original _nav.html.erb and c/p that code into both new files.
+now, devise let us sign in just fine - but we can't really leave!
+welp - might as well work on our _nav_user.html.erb first since we're stuck here.
+let's take a closer look at what's keeping us stuck here.
+we've got a 'log out' button that's connected to nothing. so we need to give it
+some power. how do we do that?
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+ruby is our language of programmatic power; and Embedded RuBy is how we're able
+to use it on our html. let's see a demonstration.
+let's go ahead and delete the contents of our nav.html.erb.
+now let's think about the task at hand. how are we to know when a user is signed
+in or not? maybe devise knows - devise is good at this sort of authentication
+stuff. ah - "user_signed_in?" -> a built in helper.
+and as rubyists, we're well versed in boolean conditioning; if a user is signed
+in - show them the user page, otherwise they're a guest.
+<% if user_signed_in? %>
+  <%= render 'layouts/nav_user' %>
+<% else %>
+  <%= render 'layouts/nav_guest' %>
+<% end %>
+feel like a wizard, yet?
+<insert Nintendo 'now your playing with power' gif>
+
+////User now greeted by email |||| 1ed923f85df3d307cdd74495bbcb565de3ae7757\\\\\
+
+let's add some guest functionality here; a guest should have the option to either
+sign in or sign up. to be able to link_to this functionality we'll reference
+rake routes to see what our options are.
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome<span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><a href="/help">help</a></li>
+    <li role="separator" class="divider"></li>
+    <li><%= link_to 'Sign In', user_session_path %></li>
+    <li><%= link_to 'Sign Up', new_user_registration_path %></li>
+  </ul>
+</li>
+nice!
+and before we commit - let's make our sign in experience a bit more personable;
+let's greet our user upon sign in by their email!
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= current_user.email %><span class="caret"></span></a>
+commit!
+
+add username to user; greet user by username! 0e8a8e47e17b3450ad1d389f0b4655b5ae219dfd
+
+so - to better demonstrate what's happening when we migrate im just going to name
+a migration and im going to manually type out what would happen if we generated
+username(add_column :users, :username, :string),
+then im going to add a schema statement to assure everyone is unique(
+add_index :users, :username, unique: true
+). http://apidock.com/rails/ActiveRecord/ConnectionAdapters/SchemaStatements/add_index
+and then we'll give our one user a username via active record!
+
+////////////////////////////Strong Parameters\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+so - to start, this code is going to look really crazy. you may be wondering how
+i know to write it at all. the answer is: documentation. I want strong parameters:
+a RoR security feature that allows the DB to be updated while protecting the DB.
+application_controller.html.erb
+lastly, we want to implement some routing to get the user's name to display in
+their profile url.
+1) change the route from: get '/profile' => 'pages#profile' To: get '/user/:id' => 'pages#profile'
+//////////////////////////Add UserName To URL @ Profile\\\\\\\\\\\\\\\\\\\\\\\\\
+today we're going to round off the week by making it possible to tweet! Sorry -
+my lawyers are telling me to say fleet!
+
+let's think about the relations an associations of a tw-Fleet -- ohkay, im just
+gonna say post from here on out. a post has an author (read User). so since were
+gonna give our user the ability to post first, let's set up some customization
+for them on their profile page.
+got to routes and change your profile get path to 'user/:id'(unique id) and in
+nav_user change your profile line to
+<li><a href="/user/<%= current_user.username %>">profile</a></li>
+neat!
+the next step is to generate a model for Post. im giving the model the columns
+content:text & user:references.
+read: rails g model Post content:text user:references << references enables us
+to know which user owns which post!
+so let's see what we got!
+
+i'll go over to my migration and assert that everything is as expected, but ALSO
+to add my index behavior with add_index :posts,[:user_id, :created_at]
+after that i want to go to my post model and make sure i see 'belongs_to :user'
+(that's a result from user:resources). were also going to validate that the user
+id MUST be present in order to post, and then were going to validate another
+behavior that made twitter in/famous: were going to make sure all posts are maxed
+at 140 characters.
+
+so let's see if this works >> first in our database!
+> u = User.find_by(#)
+> p = Post.new(content:"test post", user_id: u.id)
+
+NEXT: validations
+whenever we want to tie 2 or more models together we're going to need to use
+associations.
+user.rb: has_many :posts
+post.rb: default_scope -> { order(created_at: :desc) }
+
+so now i have to populate my views with the posts from my DB!
+but twitter has some parameters;
+the home page displays posts from all the people you follow.
+but since we can't follow anyone yet we're going to just display all posts until
+we set up that validation!
+the explore page will be similar - but we actually want ALL posts to display there!
+and in our profile we'll just see only our posts, or only the posts of the user
+profile you're visiting.
+
+so let's hop over to the pages controller & address our profile action#controller
+we're gonna write in a bit of logic to display the user's username in the url &
+below that code were going to add our instance variable @posts = Post.all.
+
+now let's go over to our profile page and give a looksy.
+let's make our 'Fleets' placeholder real now that we have our Post model with its
+content param!
+
+<div class="col-xs-6">
+  <% for @p in @posts %>
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <p><%= @p.content %></p>
+        </div>
+    </div>
+  <% end %>
+</div>
+
+now we should see the fleets we fleeted in our DB on our profile page!
+
+but why stop there? let's use the same code to populate over our home and explore
+pages where they host fleets!
+
+ohkay - so we've got fleets posting across multiple pages!
+but right now they're all creating new columns per fleet - which is messing up
+our layout.
+let's fix that bootstrap style issue by deleting those duplicating column lines.
+
+now let's make a form to be able to submit fleets the REAL way!
+why write it when we can c/p it from devise(edit.html.erb)!
+
+make a new folder to hold this form, since it's for submitting fleets.
+and then make a _post_form partial!
+paste the devise edit page into your new partial and redact it down to this:
+
+<%= form_for(@newPost) do |f| %>
+
+  <div class="field">
+    <%= f.label :content %><br />
+    <%= f.text_field :content, autofocus: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Add Post" %>
+  </div>
+<% end %>
+
+now we'll render it into our profile page.
+
+works perfectly, right? what do you mean an error?! BAH!
+it because Rails doesn't know what to do with the form data once its passed back.
+it has never seen @newPost before, and doesn't know what to make of it.
+
+we resolve this by going into the profile action#controller & making our
+instance variable real; @newPost = Post.new
+
+if errors were dollars i'd be a wealthy guy. ohk - let's think through this routing
+error.
+"undefined method `posts_path'" >> hmm, routing issue.
+rake routes.
+dang, rails is right. there really isn't a path for it.
+welp - we tried, guys. good effort. let's just give up. development is hard.
+[ The End ]
+(>0~0)> but weit ... resources! or to put it better, resources :posts
+=========================================Day:3==================================
+Adding Followers to users! Or, since we're developers, what we hear is:
+implemement follower and following relationships into our database.
+
+so we're gonna want a new DB model. now we could make a Follower model and
+a Followed model, but im going to combine the two into a Relationship model
+that covers both.
+>rails g model Relationship
+then we're going to go to our Relationship migration folder and add in the ability
+for our columns to be indexed and searched quickly.
+
+add_index :relationships, :follower_id
+add_index :relationships, :followed_id
+add_index :relationships, [:follower_id, :followed_id], unique: true
+
+and after this - since we're dealing with User relationships, were going to go
+over to the user model and add onto our associations.
+
+here we're going to use something new: "dependent: :destroy" < it'll remove, in
+this case, our user's fleets if their account is deleted. otherwise people would
+still be able to look at the posts of a deleted account.
+
+next were gonna hop on over to our Relationship model and add in IT's associations.
+
+belongs_to :follower, class_name: 'User' << notice how we're not using "follower_id"?
+belongs_to :followed, class_name: 'User' << it's because this is how we define a term for our DB
+validates :follower_id, presence: true
+validates :followed_id, presence: true
