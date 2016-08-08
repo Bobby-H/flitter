@@ -258,4 +258,30 @@ welp - we tried, guys. good effort. let's just give up. development is hard.
 [ The End ]
 (>0~0)> but weit ... resources! or to put it better, resources :posts
 =========================================Day:3==================================
-Adding Followers to users!
+Adding Followers to users! Or, since we're developers, what we hear is:
+implemement follower and following relationships into our database.
+
+so we're gonna want a new DB model. now we could make a Follower model and
+a Followed model, but im going to combine the two into a Relationship model
+that covers both.
+>rails g model Relationship
+then we're going to go to our Relationship migration folder and add in the ability
+for our columns to be indexed and searched quickly.
+
+add_index :relationships, :follower_id
+add_index :relationships, :followed_id
+add_index :relationships, [:follower_id, :followed_id], unique: true
+
+and after this - since we're dealing with User relationships, were going to go
+over to the user model and add onto our associations.
+
+here we're going to use something new: "dependent: :destroy" < it'll remove, in
+this case, our user's fleets if their account is deleted. otherwise people would
+still be able to look at the posts of a deleted account.
+
+next were gonna hop on over to our Relationship model and add in IT's associations.
+
+belongs_to :follower, class_name: 'User' << notice how we're not using "follower_id"?
+belongs_to :followed, class_name: 'User' << it's because this is how we define a term for our DB
+validates :follower_id, presence: true
+validates :followed_id, presence: true
