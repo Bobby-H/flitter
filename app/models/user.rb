@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
          has_many :posts, dependent: :destroy
+<<<<<<< HEAD
 
          has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy #adding a field called active_relationships which will corelate with our relationship model
          #allow us to differentiate between you being followed(active_relationship) and you following someone else(passive_relationship)
@@ -32,4 +33,9 @@ class User < ActiveRecord::Base
          def following?(other)
            following.include?(other)
          end
+=======
+         has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+
+         has_many :following, through: :active_relationships, source: :followed
+>>>>>>> origin/working
 end
