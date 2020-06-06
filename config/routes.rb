@@ -1,13 +1,19 @@
 Rails.application.routes.draw do
-  get 'posts/new'
-
-  get 'posts/create'
-
   devise_for :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
   resources :posts
+  
+  #ROOT URL
   root 'pages#home'
 
+  get 'posts/new'
+  get 'posts/create'
 
+  #ROUTES for Pages
   get '/home' => 'pages#home'
   get '/explore' => 'pages#explore'
   get '/user/:id' => 'pages#profile'
